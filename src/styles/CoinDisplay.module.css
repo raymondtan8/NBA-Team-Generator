@@ -1,0 +1,10 @@
+.coin {
+    display: inline-block;
+    float: right;
+    margin-top: 9%;
+    background-color: green;
+    width: 12%;
+    border-radius: 15px;
+    text-align: center;
+    padding: .8% .8%;
+}

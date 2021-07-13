@@ -1,8 +1,8 @@
 import React from "react";
 
-import classes from "../../styles/StartGameButton.module.css";
+import classes from "../../styles/StartGame.module.css";
 
-const StartGameButton = (props) => {
+const StartGame = (props) => {
     return (
         <React.Fragment>
             <h2><i>Will your team go 82-0?...</i></h2>
@@ -14,4 +14,4 @@ const StartGameButton = (props) => {
     );
 }
 
-export default StartGameButton;
+export default StartGame;

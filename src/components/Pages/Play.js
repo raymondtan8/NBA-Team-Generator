@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 
 import Card from "../UI/Card.js";
-import StartGameButton from "../Play/StartGameButton.js";
+import StartGame from "../Play/StartGame.js";
 import Gameplay from "../Play/Gameplay.js";
 
 const Play = (props) => {
@@ -13,7 +13,7 @@ const Play = (props) => {
 
     return (
         <Card>
-            {!gameIsStarted && <StartGameButton onStartGame={startGameHandler} />}
+            {!gameIsStarted && <StartGame onStartGame={startGameHandler} />}
             {gameIsStarted && <Gameplay />}
         </Card>
     );

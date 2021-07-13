@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 
+import Roster from "./Roster.js";
+
 import classes from "../../styles/TeamRandomizer.module.css";
 
-
+// Have to use two NBA APIs because the one I was originally using had problems with promises
+const NBA = require("nba"); 
 const nba = require("nba-api-client");
+const teams = Object.values(require("../../assets/teams.json"));
 
 const getLogoLinks = () => {
-    const teams = require("../../assets/teams.json");
-    const logoLinks = Object.values(teams).map((team) => {
+    const logoLinks = teams.map((team) => {
         return nba.getTeamLogoURLs(team.Abbrev)[0];
     });
     return logoLinks;
@@ -18,25 +21,63 @@ const getLogoLinkIndex = (index) => {
     return (index + 1) % 30;
 }
 
+const randomNum = (max) => {
+    return Math.floor(Math.random() * max);
+}
+
+// Gathers the best player at each position of team, and returns it as an object.
+
+const gatherPlayers = async (team) => {
+    const teams = await NBA.stats.commonTeamRoster({TeamID: team.TeamID});
+    const roster = teams.commonTeamRoster;
+    // console.log(roster);
+    const playerData = [];
+    for (let i = 0; i < roster.length; i++) {
+        const cleanedInfo = await gatherPlayersHelper(roster[i]);
+        playerData.push(cleanedInfo[0]);
+    }
+    // console.log(playerData);
+    // TODO: getBestPlayers(playerData);
+}
+
+const gatherPlayersHelper = async (player) => {
+    const data = await NBA.stats.playerInfo({PlayerID: player.playerId});
+    return data.playerHeadlineStats;
+}
+
+/** COMPONENT FUNCTION */ 
 const TeamRandomizer = (props) => {
     const logoLinks = getLogoLinks();
-    const [logoLinkIndex, setLogoLinkIndex] = useState(0);
+    const startingIndex = randomNum(30);
+    let playerData = {}; // Will be updated
+    const [counter, setCounter] = useState(0);
+    const [showRoster, setShowRoster] = useState(false);
+    const [logoLinkIndex, setLogoLinkIndex] = useState(startingIndex);
     let currImg = <img className={classes["team-img"]} src={logoLinks[logoLinkIndex]}/>;
 
     useEffect(() => {
-        // setLogoLinkIndex((logoLinkIndex) => logoLinkIndex + 1);
-         const timer = setTimeout(() => {
-            setLogoLinkIndex(getLogoLinkIndex(logoLinkIndex));
-         }, 150);
-
-        return () => {
-            clearTimeout(timer);
-        };
+         if (counter !== (33)) {
+            setCounter((counter) => counter + 1);
+            const timer = setTimeout(() => {
+                setLogoLinkIndex(getLogoLinkIndex(logoLinkIndex));
+             }, 100);
+    
+            return () => {
+                clearTimeout(timer);
+            };
+         } else {
+            const team = teams[logoLinkIndex];
+            gatherPlayers(team);
+            // setShowRoster(true);
+         }
     }, [logoLinkIndex]);
 
     return (
         <React.Fragment>
-            {currImg}
+            <div style={{display: "flex"}}>
+                {currImg}
+                {/* {showRoster && <Roster playerData={playerData}/>} */}
+            </div> 
         </React.Fragment>
     )
 }

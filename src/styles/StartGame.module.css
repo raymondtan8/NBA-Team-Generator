@@ -13,3 +13,16 @@
 .btn:hover {
     background-color: #0a0a91;
 }
+
+/**
+.seed-input {
+    display: block;
+    margin: 4% auto;
+    background-color: #c6c6c6;
+    width: 25%;
+    height: 25px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid black;
+}
+*/
