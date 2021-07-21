@@ -25,24 +25,29 @@ const randomNum = (max) => {
     return Math.floor(Math.random() * max);
 }
 
-// Gathers the best player at each position of team, and returns it as an object.
-
+// Gathers the entire roster of players from team
 const gatherPlayers = async (team) => {
-    const teams = await NBA.stats.commonTeamRoster({TeamID: team.TeamID});
+    const teams = await NBA.stats.commonTeamRoster({TeamID: team.TeamID, Season: "2019-20"});
     const roster = teams.commonTeamRoster;
     // console.log(roster);
-    const playerData = [];
+    const wholePlayerData = [];
     for (let i = 0; i < roster.length; i++) {
         const cleanedInfo = await gatherPlayersHelper(roster[i]);
-        playerData.push(cleanedInfo[0]);
+        wholePlayerData.push(cleanedInfo[0]);
     }
-    // console.log(playerData);
-    // TODO: getBestPlayers(playerData);
+    console.log(wholePlayerData);
+    // TODO: getBestPlayers(wholePlayerData);
 }
 
 const gatherPlayersHelper = async (player) => {
     const data = await NBA.stats.playerInfo({PlayerID: player.playerId});
     return data.playerHeadlineStats;
+}
+
+const getBestPlayers = (wholePlayerData) => {
+    const bestGuards = [];
+    const bestForwards = [];
+    const bestCenters = [];
 }
 
 /** COMPONENT FUNCTION */ 
